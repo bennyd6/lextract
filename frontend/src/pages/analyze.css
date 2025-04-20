@@ -255,11 +255,13 @@
 
 .stage.active .dot {
     background: linear-gradient(45deg, #1a73e8, #6c5ce7);
+    background: linear-gradient(45deg, #ffffff, #000000);
     box-shadow: 0 0 10px rgba(108, 92, 231, 0.5);
 }
 
 .stage.done .dot {
     background: linear-gradient(45deg, #1a73e8, #6c5ce7);
+    background: linear-gradient(45deg, #ffffff, #000000);
 }
 
 .stage .label {
@@ -284,6 +286,7 @@
 .line-fill {
     height: 100%;
     background: linear-gradient(45deg, #1a73e8, #6c5ce7);
+    background: linear-gradient(45deg, #000000, #555555);
     transition: width 0.5s ease;
 }
 

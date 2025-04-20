@@ -4,6 +4,8 @@ import su from '../assets/submit.png';
 import d from '../assets/download.png';
 import e from '../assets/email.png';
 import c from '../assets/chatbot.png';
+import { useTranslation } from 'react-i18next';
+
 
 export default function Analyze() {
     const [image, setImage] = useState(null);
@@ -11,6 +13,8 @@ export default function Analyze() {
     const [currentStage, setCurrentStage] = useState(-1);
     const [resultJson, setResultJson] = useState(null);
     const [animateTitle, setAnimateTitle] = useState(false);
+    const { t } = useTranslation();
+
 
     const inputRef = useRef(null);
 
@@ -129,7 +133,7 @@ export default function Analyze() {
             <div className="a-top">
                 <div className={`hero-title ${animateTitle ? 'animate' : ''}`}>
                     <h1>Document Analysis</h1>
-                    <p className="tagline">Extract structured data from legal documents in multiple languages</p>
+                    {/* <p className="tagline">Extract structured data from legal documents in multiple languages</p> */}
                 </div>
             </div>
 
@@ -149,9 +153,8 @@ export default function Analyze() {
                             </div>
                             <div className="divider"></div>
                             <div className="a-1-2">
-                                <p>Drag and Drop your image here</p>
-                                <p>or</p>
-                                <p>Click here to upload</p>
+                            <p>{t('documentAnalysis.imageUpload.dragDrop')}</p>
+                            <p>{t('documentAnalysis.imageUpload.clickToUpload')}</p>
                             </div>
                         </>
                     )}

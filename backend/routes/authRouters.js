@@ -24,7 +24,7 @@ router.post('/getuser', authMiddleware, async (req, res) => {
     // console.log(user.name);
     if (!user) return res.status(404).send('User not found');
 
-    res.json(user.name);
+    res.json(user.email);
   } catch (error) {
     console.error('Error fetching user:', error.message);
     res.status(500).send('Internal Server Error');
@@ -78,7 +78,7 @@ router.post("/register", async (req, res) => {
     const newUser = new User({ name, email, password,phone });
     await newUser.save();
 
-    const token = jwt.sign({ id: User._id }, "process.env.JWT_SECRET", {
+    const token = jwt.sign({ id: newUser._id }, "process.env.JWT_SECRET", {
       expiresIn: "10h",
     });
 

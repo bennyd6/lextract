@@ -4,17 +4,14 @@ const { verify } = pkg;
 const authMiddleware = (req, res, next) => {
     try {
         const token = req.header("Authorization");
-        
+
         if (!token) {
             return res.status(401).json({ message: "Access denied. No token provided." });
         }
 
-        // Remove "Bearer " prefix if present
-        const tokenWithoutBearer = token.startsWith("Bearer ") ? token.split(" ")[1] : token;
-        
-        // Verify the token
-        const decoded = verify(tokenWithoutBearer, "process.env.JWT_SECRET");
-
+        // Directly verify the token (no Bearer prefix expected)
+        const decoded = verify(token, "process.env.JWT_SECRET");
+        console.log(decoded);
         if (!decoded || !decoded.id) {
             return res.status(400).json({ message: "Invalid token. Missing user details." });
         }
