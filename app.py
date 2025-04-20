@@ -44,7 +44,7 @@ Reporting officer/office
 Relevant legal sections (e.g., Section 143(1), 271A)  
 
 Keep the numbers normally.  
-Respond only in JSON format.
+Respond only in JSON format and in english.
 '''
 
         response = model.generate_content(prompt)
