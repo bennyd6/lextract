@@ -1,0 +1,26 @@
+.home-main{
+    height: 110vh;
+    width: 100vw;
+    background: linear-gradient(45deg,white,#60B5FF,#79aaff, #00c6ff, #f77062);
+    background-size: 400% 400%;
+    animation: gradientChange 20s ease infinite;
+    display: flex;
+}
+
+@keyframes gradientChange {
+    0% {
+        background-position: 0% 50%;
+    }
+    25% {
+        background-position: 50% 0%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    75% {
+        background-position: 50% 100%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
