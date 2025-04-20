@@ -57,5 +57,7 @@ Respond only in JSON format and in english.
         if os.path.exists(temp_img_path):
             os.remove(temp_img_path)
 
+
+
 if __name__ == '__main__':
     app.run(debug=True)

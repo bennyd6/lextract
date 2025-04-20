@@ -5,6 +5,7 @@ import d from '../assets/download.png';
 import e from '../assets/email.png';
 import c from '../assets/chatbot.png';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
 
 
 export default function Analyze() {
@@ -85,9 +86,9 @@ export default function Analyze() {
     };
     const handleDownload = () => {
         if (!resultJson) return;
-    
+        
         let dataToExport;
-    
+        
         try {
             const cleaned =
                 typeof resultJson === 'string'
@@ -114,17 +115,51 @@ export default function Analyze() {
         ];
     
         const csvContent = rows.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
-    
+        
         // Create a blob and trigger download
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
-    
+        
         const link = document.createElement('a');
         link.setAttribute('href', url);
         link.setAttribute('download', 'analyzed_data.csv');
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+    };
+    
+    const handleChat = () => {
+        window.location.href = '/chat';
+    }
+    
+    const handleEmail = async () => {
+        if (!resultJson) return;
+    
+        try {
+            const token = localStorage.getItem('token'); // Make sure your token is stored in localStorage or wherever you're keeping it
+    
+            const cleaned =
+                typeof resultJson === 'string'
+                    ? resultJson.replace(/json|```/g, '').trim()
+                    : JSON.stringify(resultJson);
+    
+            const parsedData = JSON.parse(cleaned);
+    
+            const response = await axios.post(
+                'http://localhost:3000/api/auth/msg',
+                { data: parsedData },
+                {
+                    headers: {
+                        Authorization: token,
+                    },
+                }
+            );
+    
+            alert('📧 Email sent successfully!');
+        } catch (error) {
+            console.error('Error sending email:', error.message);
+            alert('❌ Failed to send email');
+        }
     };
     
 
@@ -216,41 +251,26 @@ export default function Analyze() {
 
                                 return (
                                     <table className="structured-table">
-                                        <tbody>
-                                            <tr>
-                                                <th>Client Name</th>
-                                                <td>{data["Client name"] || 'N/A'}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>PAN</th>
-                                                <td>{data["PII data"]?.PAN?.join(', ') || 'N/A'}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>AADHAAR</th>
-                                                <td>{data["PII data"]?.AADHAAR?.join(', ') || 'N/A'}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>GSTIN</th>
-                                                <td>{data["PII data"]?.GSTIN?.join(', ') || 'N/A'}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Nature of Notice</th>
-                                                <td>{data["Nature of notice"] || 'N/A'}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Deadlines and Penalties</th>
-                                                <td>{data["Deadlines and penalties"] || 'N/A'}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Reporting Officer/Office</th>
-                                                <td>{data["Reporting officer/office"] || 'N/A'}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Relevant Legal Sections</th>
-                                                <td>{data["Relevant legal sections"] || 'N/A'}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+    <tbody>
+        {Object.entries(data).map(([key, value]) => (
+            <tr key={key}>
+                <th>{key}</th>
+                <td>
+                    {typeof value === 'object' && value !== null
+                        ? Array.isArray(value)
+                            ? value.join(', ')
+                            : Object.entries(value).map(([subKey, subVal]) => (
+                                <div key={subKey}>
+                                    <strong>{subKey}:</strong> {Array.isArray(subVal) ? subVal.join(', ') : subVal || 'N/A'}
+                                </div>
+                              ))
+                        : value || 'N/A'
+                    }
+                </td>
+            </tr>
+        ))}
+    </tbody>
+</table>
                                 );
                             } catch (error) {
                                 return <p style={{ color: 'red' }}>Error Analyzing the Document: {error.message}</p>;
@@ -259,8 +279,8 @@ export default function Analyze() {
                     </div>
                     <div className="a-4">
                         <img src={d} alt="Download results" title="Download results" onClick={handleDownload}/>
-                        <img src={e} alt="Email results" title="Email results" />
-                        <img src={c} alt="Chat with AI" title="Chat with AI" />
+                        <img src={e} alt="Email results" title="Email results" onClick={handleEmail} />
+                        <img src={c} alt="Chat with AI" title="Chat with AI" onClick={handleChat}/>
                     </div>
                 </>
             )}

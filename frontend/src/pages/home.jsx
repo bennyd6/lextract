@@ -59,7 +59,7 @@ export default function Home() {
 
             <div className="stats-section animate-on-scroll">
                 <div className="stat-item">
-                    <span className="stat-number">15+</span>
+                    <span className="stat-number">5+</span>
                     <span className="stat-label">{t('statsSection.languagesSupported')}</span>
                 </div>
                 <div className="stat-item">

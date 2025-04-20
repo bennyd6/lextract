@@ -1,21 +1,79 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
-
+import axios from "axios";
+import nodemailer from "nodemailer";
 import authMiddleware from "../middleware/authMiddleware.js"
 const router = express.Router();
 
-router.post("/", authMiddleware, (req, res) => {
-  const { id,} = req.user;
-  console.log("Hello");
-   
 
-  return res.json({
-      message: "User authenticated successfully",
-      id,
-     
-  });
+
+
+router.post('/msg', authMiddleware, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId).select('name email');
+
+    if (!user) return res.status(404).send('User not found');
+
+    const bodyData = req.body.data;
+
+    if (!bodyData) {
+      return res.status(400).send('No data provided');
+    }
+
+    // Format email content
+    const content = `
+Hi ${user.name},
+
+Here is your analyzed document data:
+
+Client Name: ${bodyData['Client name'] || 'N/A'}
+PAN: ${bodyData['PII data']?.PAN?.join(', ') || 'N/A'}
+AADHAAR: ${bodyData['PII data']?.AADHAAR?.join(', ') || 'N/A'}
+GSTIN: ${bodyData['PII data']?.GSTIN?.join(', ') || 'N/A'}
+Nature of Notice: ${bodyData['Nature of notice'] || 'N/A'}
+Deadlines and Penalties: ${bodyData['Deadlines and penalties'] || 'N/A'}
+Reporting Officer/Office: ${bodyData['Reporting officer/office'] || 'N/A'}
+Relevant Legal Sections: ${bodyData['Relevant legal sections'] || 'N/A'}
+
+Best regards,
+Document Analysis System
+    `;
+
+    // Set up transporter
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: '228r1a05g5@cmrec.ac.in',
+        pass: 'szgl rmce uibr gqws' // App password
+      }
+    });
+
+    const mailOptions = {
+      from: '228r1a05g5@cmrec.ac.in',
+      to: user.email,
+      subject: 'Your Document Analysis Results',
+      text: content
+    };
+
+    // Send mail
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error sending email:', error);
+        return res.status(500).send('Failed to send email');
+      } else {
+        console.log('Email sent:', info.response);
+        return res.status(200).send('Email sent successfully!');
+      }
+    });
+
+  } catch (error) {
+    console.error('Internal error:', error.message);
+    res.status(500).send('Internal Server Error');
+  }
 });
+
 router.post('/getuser', authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;

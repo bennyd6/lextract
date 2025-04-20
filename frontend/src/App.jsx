@@ -5,6 +5,7 @@ import Signup from './pages/signup';
 import Login from './pages/login';
 // import About from './about';
 import Analyze from './pages/analyze';
+import Chat from './pages/chat';
 import './App.css'
 
 const PrivateRoute = ({ children }) => {
@@ -23,6 +24,7 @@ function App() {
       <Routes>
         <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
         <Route path="/analyze" element={<PrivateRoute><Analyze /></PrivateRoute>} />
+        <Route path="/chat" element={<PrivateRoute><Chat /></PrivateRoute>} />
         {/* <Route path="/chat" element={<PrivateRoute><Chatbot /></PrivateRoute>} /> */}
         {/* <Route path="/about" element={<PrivateRoute><About /></PrivateRoute>} /> */}
         <Route path="/login" element={<Login />} />
