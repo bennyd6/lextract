@@ -41,7 +41,7 @@ function Chat() {
   const sendMessage = async (text) => {
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:5000/chat", { message: text });
+      const res = await axios.post("https://lextract.onrender.com/chat", { message: text });
       const botResponse = res.data.response;
       setResponse(botResponse);
       speak(botResponse);

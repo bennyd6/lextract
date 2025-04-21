@@ -72,7 +72,7 @@ export default function Analyze() {
             formData.append('file', file);
 
             try {
-                const res = await fetch("http://localhost:5000/analyze", {
+                const res = await fetch("https://lextract.onrender.com/analyze", {
                     method: "POST",
                     body: formData,
                 });
@@ -146,7 +146,7 @@ export default function Analyze() {
             const parsedData = JSON.parse(cleaned);
     
             const response = await axios.post(
-                'http://localhost:3000/api/auth/msg',
+                'https://lextract-1.onrender.com/api/auth/msg',
                 { data: parsedData },
                 {
                     headers: {

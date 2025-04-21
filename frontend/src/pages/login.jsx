@@ -15,7 +15,7 @@ export default function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3000/api/auth/login', credentials);
+            const response = await axios.post('https://lextract-1.onrender.com/api/auth/login', credentials);
             alert('Login successful!');
             localStorage.setItem('authToken', response.data.token);
             navigate('/');
